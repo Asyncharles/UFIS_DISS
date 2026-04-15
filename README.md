@@ -111,3 +111,20 @@ This repository is backend-only. The current implementation emphasizes:
 - state-machine enforcement for corporate actions
 - regression coverage for spec scenarios
 - benchmarkable synthetic datasets
+
+## AI Usage
+
+AI was used in two ways for this dissertation project:
+
+### Claude opusplan prompts
+ 
+- Based on the technical requirements page and given latex template, generate a plan.md document on how to properly structure an undergraduate CS dissertation report
+- How to do mint listings for java
+- How can i remove floating images/charts in latex
+- Give me a brief feedback summary and honest opinion on this dissertation report for a 4th CS student at the university of stirling. Include references double-check
+
+### Claude opus-4.6
+
+- Based on the available springboot code and dissertation outline, generate a spec.md for an agent to be able to understand this project
+- Based on the spec.md, generate a web UI for testing and demo purpose | personal comment: I did this to avoid using postman/insomnia during the demo
+- Add more details based on the payload for the audit, ask questions if you have any
