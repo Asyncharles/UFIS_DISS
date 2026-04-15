@@ -128,3 +128,5 @@ AI was used in two ways for this dissertation project:
 - Based on the available springboot code and dissertation outline, generate a spec.md for an agent to be able to understand this project
 - Based on the spec.md, generate a web UI for testing and demo purpose | personal comment: I did this to avoid using postman/insomnia during the demo
 - Add more details based on the payload for the audit, ask questions if you have any
+- Based on the spec.md add more JUnit tests to assure to cover edge-cases and other regular cases that I have missed
+- Based on the code and spec.md generate a GUIDE.md for the webui
