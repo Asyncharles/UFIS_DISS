@@ -41,6 +41,9 @@ Start the API:
 The server listens on `http://localhost:8080`.
 
 Run the test suite:
+The following two tests will fail by default as I have added a forced divergence for testing purposes:
+- AuditLineageIntegrationTest > auditLineageUsesKnownAtAsTransactionTimeCutoff()
+- SearchIntegrationTest > searchReturnsGroupedResultsAcrossCoreObjectTypes()
 
 ```bash
 ./gradlew test
