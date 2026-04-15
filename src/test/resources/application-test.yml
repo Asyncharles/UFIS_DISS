@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: ufis-test
+
+datomic:
+  uri: "datomic:mem://ufis-test"

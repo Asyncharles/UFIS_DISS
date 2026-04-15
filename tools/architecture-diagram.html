@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>UFIS Architecture Diagram</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #fff;
+    font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px;
+  }
+  .controls {
+    margin-bottom: 16px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  .controls button {
+    padding: 8px 20px;
+    font-size: 14px;
+    cursor: pointer;
+    border: 1px solid #555;
+    border-radius: 4px;
+    background: #f5f5f5;
+  }
+  .controls button:hover { background: #e0e0e0; }
+  .controls select {
+    padding: 8px 12px;
+    font-size: 14px;
+    border: 1px solid #555;
+    border-radius: 4px;
+  }
+  svg { border: 1px solid #ccc; }
+</style>
+</head>
+<body>
+
+<div class="controls">
+  <label>Scale:
+    <select id="scale">
+      <option value="1">1x (960 x 720)</option>
+      <option value="2" selected>2x (1920 x 1440)</option>
+      <option value="3">3x (2880 x 2160)</option>
+    </select>
+  </label>
+  <button onclick="exportPNG()">Export PNG</button>
+  <button onclick="exportSVG()">Export SVG</button>
+</div>
+
+<svg id="diagram" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 720" width="960" height="720">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#444"/>
+    </marker>
+    <marker id="arrow-dashed" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#888"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="960" height="720" fill="#fff"/>
+
+  <!-- Title -->
+  <text x="480" y="36" text-anchor="middle" font-size="18" font-weight="bold" fill="#222"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">
+    UFIS System Architecture
+  </text>
+
+  <!-- ============ CLIENT TIER ============ -->
+  <rect x="40" y="56" width="880" height="80" rx="6" fill="#f0f4ff" stroke="#a0b4d0" stroke-width="1.5"/>
+  <text x="56" y="74" font-size="11" fill="#5570a0" font-weight="bold"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">CLIENT TIER</text>
+
+  <!-- Web UI box -->
+  <rect x="220" y="82" width="240" height="42" rx="4" fill="#fff" stroke="#5570a0" stroke-width="1.5"/>
+  <text x="340" y="100" text-anchor="middle" font-size="13" font-weight="bold" fill="#333"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">Web Investigation UI</text>
+  <text x="340" y="116" text-anchor="middle" font-size="10.5" fill="#666"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">React + Vite + TanStack Router</text>
+
+  <!-- External client box -->
+  <rect x="520" y="82" width="200" height="42" rx="4" fill="#fff" stroke="#5570a0" stroke-width="1.5"/>
+  <text x="620" y="100" text-anchor="middle" font-size="13" font-weight="bold" fill="#333"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">External API Clients</text>
+  <text x="620" y="116" text-anchor="middle" font-size="10.5" fill="#666"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">REST / JSON</text>
+
+  <!-- Arrows: Client -> API -->
+  <line x1="340" y1="124" x2="340" y2="168" stroke="#444" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="352" y="152" font-size="10" fill="#666"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">HTTP</text>
+  <line x1="620" y1="124" x2="620" y2="168" stroke="#444" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="632" y="152" font-size="10" fill="#666"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">HTTP</text>
+
+  <!-- ============ APPLICATION TIER ============ -->
+  <rect x="40" y="168" width="880" height="370" rx="6" fill="#f9faf6" stroke="#8aa07a" stroke-width="1.5"/>
+  <text x="56" y="186" font-size="11" fill="#5a7a4a" font-weight="bold"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">APPLICATION TIER — Spring Boot (Java 21)</text>
+
+  <!-- REST API Layer -->
+  <rect x="100" y="198" width="760" height="52" rx="4" fill="#e8f0e0" stroke="#8aa07a" stroke-width="1.2"/>
+  <text x="480" y="220" text-anchor="middle" font-size="13" font-weight="bold" fill="#3a5a2a"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">REST API Layer (Spring MVC Controllers)</text>
+  <text x="480" y="238" text-anchor="middle" font-size="10.5" fill="#5a7a4a"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">
+    SecurityController &middot; LegalEntityController &middot; CorporateActionController
+  </text>
+
+  <!-- Arrow: API -> Service -->
+  <line x1="480" y1="250" x2="480" y2="272" stroke="#444" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Service Layer — split into two sub-boxes -->
+  <rect x="100" y="272" width="370" height="80" rx="4" fill="#fff" stroke="#8aa07a" stroke-width="1.2"/>
+  <text x="285" y="294" text-anchor="middle" font-size="13" font-weight="bold" fill="#333"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">Corporate Action Handlers</text>
+  <text x="285" y="312" text-anchor="middle" font-size="10" fill="#666"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">MergerHandler &middot; AcquisitionHandler</text>
+  <text x="285" y="326" text-anchor="middle" font-size="10" fill="#666"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">SpinOffHandler &middot; NameChangeHandler</text>
+  <text x="285" y="340" text-anchor="middle" font-size="10" fill="#666"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">StockSplitHandler &middot; RedemptionHandler</text>
+
+  <rect x="490" y="272" width="370" height="80" rx="4" fill="#fff" stroke="#8aa07a" stroke-width="1.2"/>
+  <text x="675" y="294" text-anchor="middle" font-size="13" font-weight="bold" fill="#333"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">Lineage Resolution Engine</text>
+  <text x="675" y="312" text-anchor="middle" font-size="10" fill="#666"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">SecurityLineageResolver</text>
+  <text x="675" y="326" text-anchor="middle" font-size="10" fill="#666"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">LegalEntityLineageResolver</text>
+  <text x="675" y="340" text-anchor="middle" font-size="10" fill="#666"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">LineageQuerySupport (point-in-time resolution)</text>
+
+  <!-- Arrows: Handlers -> Validation, Handlers -> Repo -->
+  <line x1="285" y1="352" x2="285" y2="378" stroke="#444" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="675" y1="352" x2="675" y2="378" stroke="#444" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Validation Layer -->
+  <rect x="100" y="378" width="370" height="46" rx="4" fill="#fef6e6" stroke="#c8a84a" stroke-width="1.2"/>
+  <text x="285" y="398" text-anchor="middle" font-size="13" font-weight="bold" fill="#7a6420"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">Validation Layer</text>
+  <text x="285" y="414" text-anchor="middle" font-size="10" fill="#8a7430"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">CorporateActionValidator &middot; State machines &middot; Cycle detection</text>
+
+  <!-- Issuer Transition -->
+  <rect x="490" y="378" width="370" height="46" rx="4" fill="#fef6e6" stroke="#c8a84a" stroke-width="1.2"/>
+  <text x="675" y="398" text-anchor="middle" font-size="13" font-weight="bold" fill="#7a6420"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">Issuer Transition Service</text>
+  <text x="675" y="414" text-anchor="middle" font-size="10" fill="#8a7430"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">Updates security issuer refs on entity mergers/acquisitions</text>
+
+  <!-- Arrows down to Repository -->
+  <line x1="285" y1="424" x2="285" y2="448" stroke="#444" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="675" y1="424" x2="675" y2="448" stroke="#444" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Repository Layer -->
+  <rect x="100" y="448" width="760" height="52" rx="4" fill="#e6ecf0" stroke="#6a8a9a" stroke-width="1.2"/>
+  <text x="480" y="470" text-anchor="middle" font-size="13" font-weight="bold" fill="#2a4a5a"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">Repository Layer (Datomic Java Peer API)</text>
+  <text x="480" y="488" text-anchor="middle" font-size="10.5" fill="#4a6a7a"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">
+    SecurityRepository &middot; LegalEntityRepository &middot; CorporateActionRepository &middot; LineageRepository
+  </text>
+
+  <!-- Arrow: Repo -> Datomic (removed duplicate — main connection is the diagonal path below) -->
+
+  <!-- ============ SIMULATOR (side component) ============ -->
+  <rect x="40" y="554" width="250" height="80" rx="6" fill="#f5f0fa" stroke="#9a80b8" stroke-width="1.5"/>
+  <text x="165" y="576" text-anchor="middle" font-size="13" font-weight="bold" fill="#5a3a7a"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">Synthetic Data Simulator</text>
+  <text x="165" y="594" text-anchor="middle" font-size="10" fill="#7a5a9a"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">DataSimulator &middot; SimulatorHarness</text>
+  <text x="165" y="610" text-anchor="middle" font-size="10" fill="#7a5a9a"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">Small &middot; Medium &middot; Large tiers</text>
+  <text x="165" y="626" text-anchor="middle" font-size="10" fill="#7a5a9a"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">Seed: 42 (deterministic)</text>
+
+  <!-- Arrow: Simulator -> Handlers (dashed, routed through left margin) -->
+  <path d="M 165 554 L 165 520 L 72 520 L 72 312 L 100 312"
+        fill="none" stroke="#888" stroke-width="1.3"
+        stroke-dasharray="6,3" marker-end="url(#arrow-dashed)"/>
+  <!-- Label background + text for simulator arrow -->
+  <rect x="46" y="398" width="18" height="96" rx="2" fill="#f9faf6" fill-opacity="0.9"/>
+  <text x="56" y="458" text-anchor="middle" font-size="10" fill="#7a5a9a" font-style="italic"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif"
+        transform="rotate(-90, 56, 458)">invokes handlers</text>
+
+  <!-- ============ BENCHMARK (side component) ============ -->
+  <rect x="310" y="554" width="250" height="80" rx="6" fill="#f5f0fa" stroke="#9a80b8" stroke-width="1.5"/>
+  <text x="435" y="576" text-anchor="middle" font-size="13" font-weight="bold" fill="#5a3a7a"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">Benchmark Harness</text>
+  <text x="435" y="594" text-anchor="middle" font-size="10" fill="#7a5a9a"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">LineageBenchmarkHarness</text>
+  <text x="435" y="610" text-anchor="middle" font-size="10" fill="#7a5a9a"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">Measures avg / P95 / max latency</text>
+  <text x="435" y="626" text-anchor="middle" font-size="10" fill="#7a5a9a"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">300ms target (Medium tier)</text>
+
+  <!-- Arrow: Benchmark -> Lineage Engine (dashed, routed through right margin) -->
+  <path d="M 435 554 L 435 520 L 898 520 L 898 312 L 860 312"
+        fill="none" stroke="#888" stroke-width="1.3"
+        stroke-dasharray="6,3" marker-end="url(#arrow-dashed)"/>
+  <!-- Label background + text for benchmark arrow -->
+  <rect x="888" y="398" width="18" height="96" rx="2" fill="#f9faf6" fill-opacity="0.9"/>
+  <text x="898" y="458" text-anchor="middle" font-size="10" fill="#7a5a9a" font-style="italic"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif"
+        transform="rotate(90, 898, 458)">queries lineage</text>
+
+  <!-- ============ DATA TIER ============ -->
+  <rect x="580" y="530" width="340" height="106" rx="6" fill="#f0f0f8" stroke="#7070a8" stroke-width="1.5"/>
+  <text x="596" y="548" font-size="11" fill="#5050a0" font-weight="bold"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">DATA TIER</text>
+
+  <!-- Datomic cylinder -->
+  <ellipse cx="750" cy="570" rx="80" ry="14" fill="#d8d8f0" stroke="#7070a8" stroke-width="1.2"/>
+  <rect x="670" y="570" width="160" height="44" fill="#d8d8f0" stroke="none"/>
+  <line x1="670" y1="570" x2="670" y2="614" stroke="#7070a8" stroke-width="1.2"/>
+  <line x1="830" y1="570" x2="830" y2="614" stroke="#7070a8" stroke-width="1.2"/>
+  <ellipse cx="750" cy="614" rx="80" ry="14" fill="#d8d8f0" stroke="#7070a8" stroke-width="1.2"/>
+  <text x="750" y="588" text-anchor="middle" font-size="14" font-weight="bold" fill="#333"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">Datomic Peer</text>
+  <text x="750" y="605" text-anchor="middle" font-size="10" fill="#5050a0"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">Immutable &middot; Bitemporal &middot; In-memory</text>
+
+  <!-- Arrow: Repo -> Datomic -->
+  <path d="M 600 500 L 700 550" fill="none" stroke="#444" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <rect x="604" y="510" width="110" height="16" rx="2" fill="#fff" fill-opacity="0.85"/>
+  <text x="660" y="522" text-anchor="middle" font-size="10" fill="#666"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">Datalog / Transactions</text>
+
+  <!-- ============ BITEMPORAL ANNOTATION ============ -->
+  <rect x="580" y="648" width="340" height="56" rx="4" fill="#fff" stroke="#7070a8" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="750" y="666" text-anchor="middle" font-size="10.5" fill="#5050a0" font-weight="bold"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">Bitemporal Query Capabilities</text>
+  <text x="750" y="682" text-anchor="middle" font-size="10" fill="#666"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">db.asOf(txTime) &rarr; audit queries</text>
+  <text x="750" y="696" text-anchor="middle" font-size="10" fill="#666"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">db.history() &rarr; point-in-time attribute resolution</text>
+
+  <!-- Connector from Datomic to bitemporal box -->
+  <line x1="750" y1="628" x2="750" y2="648" stroke="#7070a8" stroke-width="1" stroke-dasharray="4,3"/>
+</svg>
+
+<script>
+function exportPNG() {
+  const svg = document.getElementById('diagram');
+  const scale = parseInt(document.getElementById('scale').value);
+  const w = 960 * scale;
+  const h = 720 * scale;
+
+  const canvas = document.createElement('canvas');
+  canvas.width = w;
+  canvas.height = h;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(scale, scale);
+
+  const data = new XMLSerializer().serializeToString(svg);
+  const blob = new Blob([data], { type: 'image/svg+xml;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+
+  const img = new Image();
+  img.onload = function () {
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(0, 0, 960, 720);
+    ctx.drawImage(img, 0, 0, 960, 720);
+    URL.revokeObjectURL(url);
+
+    const a = document.createElement('a');
+    a.download = 'ufis-architecture-' + scale + 'x.png';
+    a.href = canvas.toDataURL('image/png');
+    a.click();
+  };
+  img.src = url;
+}
+
+function exportSVG() {
+  const svg = document.getElementById('diagram');
+  const data = new XMLSerializer().serializeToString(svg);
+  const blob = new Blob([data], { type: 'image/svg+xml;charset=utf-8' });
+  const a = document.createElement('a');
+  a.download = 'ufis-architecture.svg';
+  a.href = URL.createObjectURL(blob);
+  a.click();
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: ufis
+
+server:
+  port: 8080
+
+datomic:
+  uri: "datomic:mem://ufis"

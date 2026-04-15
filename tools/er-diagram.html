@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>UFIS Entity-Relationship Diagram</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #fff;
+    font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px;
+  }
+  .controls {
+    margin-bottom: 16px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  .controls button {
+    padding: 8px 20px;
+    font-size: 14px;
+    cursor: pointer;
+    border: 1px solid #555;
+    border-radius: 4px;
+    background: #f5f5f5;
+  }
+  .controls button:hover { background: #e0e0e0; }
+  .controls select {
+    padding: 8px 12px;
+    font-size: 14px;
+    border: 1px solid #555;
+    border-radius: 4px;
+  }
+  svg { border: 1px solid #ccc; }
+</style>
+</head>
+<body>
+
+<div class="controls">
+  <label>Scale:
+    <select id="scale">
+      <option value="1">1x (1060 x 780)</option>
+      <option value="2" selected>2x (2120 x 1560)</option>
+      <option value="3">3x (3180 x 2340)</option>
+    </select>
+  </label>
+  <button onclick="exportPNG()">Export PNG</button>
+  <button onclick="exportSVG()">Export SVG</button>
+</div>
+
+<svg id="diagram" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1060 780" width="1060" height="780">
+  <defs>
+    <!-- Small filled dot for line endpoints -->
+    <marker id="dot" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+      <circle cx="3" cy="3" r="2.5" fill="#555"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1060" height="780" fill="#fff"/>
+
+  <!-- Title -->
+  <text x="530" y="32" text-anchor="middle" font-size="17" font-weight="bold" fill="#222"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">
+    UFIS Entity-Relationship Diagram
+  </text>
+
+
+  <!-- ================================================================== -->
+  <!--                        LEGAL ENTITY (top-left)                     -->
+  <!-- ================================================================== -->
+  <rect x="40" y="76" width="280" height="230" rx="5" fill="#fff" stroke="#4a7a5a" stroke-width="1.8"/>
+  <!-- Header -->
+  <rect x="40" y="76" width="280" height="30" rx="5" fill="#4a7a5a"/>
+  <rect x="40" y="96" width="280" height="10" fill="#4a7a5a"/>
+  <text x="180" y="97" text-anchor="middle" font-size="14" font-weight="bold" fill="#fff"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">Legal Entity</text>
+  <!-- Attributes -->
+  <text x="56" y="128" font-size="11.5" fill="#333" font-family="'Consolas','Courier New',monospace">
+    <tspan font-weight="bold" fill="#b8860b">PK</tspan>  id : UUID
+  </text>
+  <line x1="50" y1="134" x2="310" y2="134" stroke="#ddd" stroke-width="0.7"/>
+  <text x="72" y="152" font-size="11.5" fill="#333" font-family="'Consolas','Courier New',monospace">name : string</text>
+  <text x="72" y="170" font-size="11.5" fill="#333" font-family="'Consolas','Courier New',monospace">type : ref <tspan font-size="9.5" fill="#888">{COMPANY, FUND, SPV,</tspan></text>
+  <text x="72" y="184" font-size="9.5" fill="#888" font-family="'Consolas','Courier New',monospace">         GOVERNMENT, SUPRANATIONAL}</text>
+  <text x="72" y="202" font-size="11.5" fill="#333" font-family="'Consolas','Courier New',monospace">state : ref <tspan font-size="9.5" fill="#888">{ACTIVE, MERGED,</tspan></text>
+  <text x="72" y="216" font-size="9.5" fill="#888" font-family="'Consolas','Courier New',monospace">            ACQUIRED}</text>
+  <text x="72" y="234" font-size="11.5" fill="#333" font-family="'Consolas','Courier New',monospace">active : boolean</text>
+  <text x="72" y="252" font-size="11.5" fill="#333" font-family="'Consolas','Courier New',monospace">founded-date : instant</text>
+  <!-- Datomic namespace label -->
+  <text x="180" y="296" text-anchor="middle" font-size="9.5" fill="#4a7a5a" font-style="italic"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">:legal-entity/*</text>
+
+
+  <!-- ================================================================== -->
+  <!--                        SECURITY (top-right)                        -->
+  <!-- ================================================================== -->
+  <rect x="600" y="76" width="280" height="268" rx="5" fill="#fff" stroke="#2a5a8a" stroke-width="1.8"/>
+  <!-- Header -->
+  <rect x="600" y="76" width="280" height="30" rx="5" fill="#2a5a8a"/>
+  <rect x="600" y="96" width="280" height="10" fill="#2a5a8a"/>
+  <text x="740" y="97" text-anchor="middle" font-size="14" font-weight="bold" fill="#fff"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">Security</text>
+  <!-- Attributes -->
+  <text x="616" y="128" font-size="11.5" fill="#333" font-family="'Consolas','Courier New',monospace">
+    <tspan font-weight="bold" fill="#b8860b">PK</tspan>  id : UUID
+  </text>
+  <line x1="610" y1="134" x2="870" y2="134" stroke="#ddd" stroke-width="0.7"/>
+  <text x="632" y="152" font-size="11.5" fill="#333" font-family="'Consolas','Courier New',monospace">name : string</text>
+  <text x="632" y="170" font-size="11.5" fill="#333" font-family="'Consolas','Courier New',monospace">isin : string <tspan font-size="9.5" fill="#888">(optional)</tspan></text>
+  <text x="632" y="188" font-size="11.5" fill="#333" font-family="'Consolas','Courier New',monospace">type : ref <tspan font-size="9.5" fill="#888">{EQUITY, BOND}</tspan></text>
+  <text x="632" y="206" font-size="11.5" fill="#333" font-family="'Consolas','Courier New',monospace">state : ref <tspan font-size="9.5" fill="#888">{ACTIVE, MERGED,</tspan></text>
+  <text x="632" y="220" font-size="9.5" fill="#888" font-family="'Consolas','Courier New',monospace">            SPLIT, REDEEMED}</text>
+  <text x="632" y="238" font-size="11.5" fill="#333" font-family="'Consolas','Courier New',monospace"><tspan font-weight="bold" fill="#c06030">FK</tspan>  issuer : ref</text>
+  <text x="632" y="256" font-size="11.5" fill="#333" font-family="'Consolas','Courier New',monospace">issue-date : instant</text>
+  <text x="632" y="274" font-size="11.5" fill="#333" font-family="'Consolas','Courier New',monospace">maturity-date : instant <tspan font-size="9.5" fill="#888">(opt.)</tspan></text>
+  <text x="632" y="292" font-size="11.5" fill="#333" font-family="'Consolas','Courier New',monospace">active : boolean</text>
+  <!-- Datomic namespace label -->
+  <text x="740" y="334" text-anchor="middle" font-size="9.5" fill="#2a5a8a" font-style="italic"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">:security/*</text>
+
+
+  <!-- ================================================================== -->
+  <!--              ISSUER relationship: Security -> Legal Entity          -->
+  <!-- ================================================================== -->
+  <path d="M 600 232 L 460 232 L 460 191 L 320 191" fill="none" stroke="#555" stroke-width="1.5"
+        marker-start="url(#dot)" marker-end="url(#dot)"/>
+  <!-- Label -->
+  <rect x="420" y="235" width="80" height="17" rx="2" fill="#fff" fill-opacity="0.92"/>
+  <text x="460" y="248" text-anchor="middle" font-size="10.5" fill="#555" font-style="italic"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">issued by</text>
+  <!-- Cardinality labels -->
+  <rect x="326" y="177" width="14" height="14" rx="2" fill="#fff" fill-opacity="0.9"/>
+  <text x="333" y="189" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#666"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">1</text>
+  <rect x="602" y="218" width="14" height="14" rx="2" fill="#fff" fill-opacity="0.9"/>
+  <text x="609" y="230" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#666"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">N</text>
+
+
+  <!-- ================================================================== -->
+  <!--                    CORPORATE ACTION (center)                       -->
+  <!-- ================================================================== -->
+  <rect x="370" y="388" width="300" height="192" rx="5" fill="#fff" stroke="#8a4a2a" stroke-width="1.8"/>
+  <!-- Header -->
+  <rect x="370" y="388" width="300" height="30" rx="5" fill="#8a4a2a"/>
+  <rect x="370" y="408" width="300" height="10" fill="#8a4a2a"/>
+  <text x="520" y="409" text-anchor="middle" font-size="14" font-weight="bold" fill="#fff"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">Corporate Action</text>
+  <!-- Attributes -->
+  <text x="386" y="440" font-size="11.5" fill="#333" font-family="'Consolas','Courier New',monospace">
+    <tspan font-weight="bold" fill="#b8860b">PK</tspan>  id : UUID
+  </text>
+  <line x1="380" y1="446" x2="660" y2="446" stroke="#ddd" stroke-width="0.7"/>
+  <text x="402" y="464" font-size="11.5" fill="#333" font-family="'Consolas','Courier New',monospace">type : ref <tspan font-size="9.5" fill="#888">{MERGER, ACQUISITION,</tspan></text>
+  <text x="402" y="478" font-size="9.5" fill="#888" font-family="'Consolas','Courier New',monospace">  SPIN_OFF, NAME_CHANGE,</text>
+  <text x="402" y="492" font-size="9.5" fill="#888" font-family="'Consolas','Courier New',monospace">  STOCK_SPLIT, REDEMPTION}</text>
+  <text x="402" y="512" font-size="11.5" fill="#333" font-family="'Consolas','Courier New',monospace">valid-date : instant</text>
+  <text x="402" y="530" font-size="11.5" fill="#333" font-family="'Consolas','Courier New',monospace">description : string</text>
+  <text x="402" y="548" font-size="11.5" fill="#333" font-family="'Consolas','Courier New',monospace">split-ratio : string <tspan font-size="9.5" fill="#888">(opt.)</tspan></text>
+  <!-- Datomic namespace label -->
+  <text x="520" y="572" text-anchor="middle" font-size="9.5" fill="#8a4a2a" font-style="italic"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">:corporate-action/*</text>
+
+  <!-- Bitemporal annotation -->
+  <rect x="375" y="582" width="290" height="36" rx="3" fill="#fff8f0" stroke="#c8a84a" stroke-width="1"
+        stroke-dasharray="4,3"/>
+  <text x="520" y="596" text-anchor="middle" font-size="10" fill="#8a6a2a" font-weight="bold"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">Bitemporal</text>
+  <text x="520" y="610" text-anchor="middle" font-size="9.5" fill="#8a6a2a"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">valid-date = valid time &middot; Datomic tx = transaction time</text>
+
+
+  <!-- ================================================================== -->
+  <!--                  LEGAL ENTITY LINEAGE (bottom-left)                -->
+  <!-- ================================================================== -->
+  <rect x="28" y="630" width="280" height="132" rx="5" fill="#fff" stroke="#6a5a8a" stroke-width="1.8"/>
+  <!-- Header -->
+  <rect x="28" y="630" width="280" height="30" rx="5" fill="#6a5a8a"/>
+  <rect x="28" y="650" width="280" height="10" fill="#6a5a8a"/>
+  <text x="168" y="651" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">Legal Entity Lineage</text>
+  <!-- Attributes -->
+  <text x="44" y="682" font-size="11.5" fill="#333" font-family="'Consolas','Courier New',monospace">
+    <tspan font-weight="bold" fill="#b8860b">PK</tspan>  id : UUID
+  </text>
+  <line x1="38" y1="688" x2="298" y2="688" stroke="#ddd" stroke-width="0.7"/>
+  <text x="60" y="706" font-size="11.5" fill="#333" font-family="'Consolas','Courier New',monospace"><tspan font-weight="bold" fill="#c06030">FK</tspan>  parent-entity : ref</text>
+  <text x="60" y="724" font-size="11.5" fill="#333" font-family="'Consolas','Courier New',monospace"><tspan font-weight="bold" fill="#c06030">FK</tspan>  child-entity : ref <tspan font-size="9.5" fill="#888">(nullable)</tspan></text>
+  <text x="60" y="742" font-size="11.5" fill="#333" font-family="'Consolas','Courier New',monospace"><tspan font-weight="bold" fill="#c06030">FK</tspan>  action : ref</text>
+  <!-- Datomic namespace label -->
+  <text x="168" y="770" text-anchor="middle" font-size="9.5" fill="#6a5a8a" font-style="italic"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">:legal-entity-lineage/*</text>
+
+
+  <!-- ================================================================== -->
+  <!--                  SECURITY LINEAGE (bottom-right)                   -->
+  <!-- ================================================================== -->
+  <rect x="732" y="630" width="280" height="132" rx="5" fill="#fff" stroke="#6a5a8a" stroke-width="1.8"/>
+  <!-- Header -->
+  <rect x="732" y="630" width="280" height="30" rx="5" fill="#6a5a8a"/>
+  <rect x="732" y="650" width="280" height="10" fill="#6a5a8a"/>
+  <text x="872" y="651" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">Security Lineage</text>
+  <!-- Attributes -->
+  <text x="748" y="682" font-size="11.5" fill="#333" font-family="'Consolas','Courier New',monospace">
+    <tspan font-weight="bold" fill="#b8860b">PK</tspan>  id : UUID
+  </text>
+  <line x1="742" y1="688" x2="1002" y2="688" stroke="#ddd" stroke-width="0.7"/>
+  <text x="764" y="706" font-size="11.5" fill="#333" font-family="'Consolas','Courier New',monospace"><tspan font-weight="bold" fill="#c06030">FK</tspan>  parent-security : ref</text>
+  <text x="764" y="724" font-size="11.5" fill="#333" font-family="'Consolas','Courier New',monospace"><tspan font-weight="bold" fill="#c06030">FK</tspan>  child-security : ref <tspan font-size="9.5" fill="#888">(null.)</tspan></text>
+  <text x="764" y="742" font-size="11.5" fill="#333" font-family="'Consolas','Courier New',monospace"><tspan font-weight="bold" fill="#c06030">FK</tspan>  action : ref</text>
+  <!-- Datomic namespace label -->
+  <text x="872" y="770" text-anchor="middle" font-size="9.5" fill="#6a5a8a" font-style="italic"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">:security-lineage/*</text>
+
+
+  <!-- ================================================================== -->
+  <!--                        RELATIONSHIP LINES                          -->
+  <!-- ================================================================== -->
+
+  <!-- ── Legal Entity Lineage -> Legal Entity (parent-entity) ── -->
+  <path d="M 108 630 L 108 306" fill="none" stroke="#6a5a8a" stroke-width="1.5"
+        marker-start="url(#dot)" marker-end="url(#dot)"/>
+  <rect x="56" y="456" width="96" height="17" rx="2" fill="#fff" fill-opacity="0.92"/>
+  <text x="104" y="469" text-anchor="middle" font-size="10.5" fill="#6a5a8a" font-style="italic"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">parent-entity</text>
+  <rect x="96" y="310" width="14" height="14" rx="2" fill="#fff" fill-opacity="0.9"/>
+  <text x="103" y="322" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#666"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">1</text>
+  <rect x="96" y="618" width="16" height="14" rx="2" fill="#fff" fill-opacity="0.9"/>
+  <text x="104" y="630" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#666"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">N</text>
+
+  <!-- ── Legal Entity Lineage -> Legal Entity (child-entity, nullable) ── -->
+  <path d="M 228 630 L 228 306" fill="none" stroke="#6a5a8a" stroke-width="1.5"
+        stroke-dasharray="6,3"
+        marker-start="url(#dot)" marker-end="url(#dot)"/>
+  <rect x="180" y="456" width="86" height="17" rx="2" fill="#fff" fill-opacity="0.92"/>
+  <text x="224" y="469" text-anchor="middle" font-size="10.5" fill="#6a5a8a" font-style="italic"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">child-entity</text>
+  <rect x="212" y="310" width="28" height="14" rx="2" fill="#fff" fill-opacity="0.9"/>
+  <text x="226" y="322" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#666"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">0..1</text>
+  <rect x="218" y="618" width="16" height="14" rx="2" fill="#fff" fill-opacity="0.9"/>
+  <text x="226" y="630" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#666"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">N</text>
+
+  <!-- ── Legal Entity Lineage -> Corporate Action (action) ── -->
+  <path d="M 308 700 L 340 700 L 340 510 L 370 510" fill="none" stroke="#8a4a2a" stroke-width="1.5"
+        marker-start="url(#dot)" marker-end="url(#dot)"/>
+  <rect x="304" y="602" width="46" height="17" rx="2" fill="#fff" fill-opacity="0.92"/>
+  <text x="328" y="615" text-anchor="middle" font-size="10.5" fill="#8a4a2a" font-style="italic"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">action</text>
+  <rect x="366" y="496" width="14" height="14" rx="2" fill="#fff" fill-opacity="0.9"/>
+  <text x="373" y="508" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#666"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">1</text>
+  <rect x="296" y="688" width="16" height="14" rx="2" fill="#fff" fill-opacity="0.9"/>
+  <text x="304" y="700" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#666"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">N</text>
+
+
+  <!-- ── Security Lineage -> Security (parent-security) ── -->
+  <path d="M 832 630 L 832 344" fill="none" stroke="#6a5a8a" stroke-width="1.5"
+        marker-start="url(#dot)" marker-end="url(#dot)"/>
+  <rect x="778" y="478" width="104" height="17" rx="2" fill="#fff" fill-opacity="0.92"/>
+  <text x="830" y="491" text-anchor="middle" font-size="10.5" fill="#6a5a8a" font-style="italic"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">parent-security</text>
+  <rect x="820" y="348" width="14" height="14" rx="2" fill="#fff" fill-opacity="0.9"/>
+  <text x="827" y="360" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#666"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">1</text>
+  <rect x="822" y="618" width="16" height="14" rx="2" fill="#fff" fill-opacity="0.9"/>
+  <text x="830" y="630" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#666"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">N</text>
+
+  <!-- ── Security Lineage -> Security (child-security, nullable) ── -->
+  <!-- Route: up from lineage box, then bend left to Security box right edge -->
+  <path d="M 952 630 L 952 300 L 880 300" fill="none" stroke="#6a5a8a" stroke-width="1.5"
+        stroke-dasharray="6,3"
+        marker-start="url(#dot)" marker-end="url(#dot)"/>
+  <rect x="904" y="478" width="96" height="17" rx="2" fill="#fff" fill-opacity="0.92"/>
+  <text x="952" y="491" text-anchor="middle" font-size="10.5" fill="#6a5a8a" font-style="italic"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">child-security</text>
+  <rect x="882" y="286" width="28" height="14" rx="2" fill="#fff" fill-opacity="0.9"/>
+  <text x="896" y="298" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#666"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">0..1</text>
+  <rect x="942" y="618" width="16" height="14" rx="2" fill="#fff" fill-opacity="0.9"/>
+  <text x="950" y="630" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#666"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">N</text>
+
+  <!-- ── Security Lineage -> Corporate Action (action) ── -->
+  <path d="M 732 700 L 700 700 L 700 510 L 670 510" fill="none" stroke="#8a4a2a" stroke-width="1.5"
+        marker-start="url(#dot)" marker-end="url(#dot)"/>
+  <rect x="692" y="602" width="46" height="17" rx="2" fill="#fff" fill-opacity="0.92"/>
+  <text x="716" y="615" text-anchor="middle" font-size="10.5" fill="#8a4a2a" font-style="italic"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">action</text>
+  <rect x="666" y="496" width="14" height="14" rx="2" fill="#fff" fill-opacity="0.9"/>
+  <text x="673" y="508" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#666"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">1</text>
+  <rect x="728" y="688" width="16" height="14" rx="2" fill="#fff" fill-opacity="0.9"/>
+  <text x="736" y="700" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#666"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">N</text>
+
+
+  <!-- ================================================================== -->
+  <!--                           LEGEND                                   -->
+  <!-- ================================================================== -->
+  <rect x="380" y="640" width="280" height="132" rx="4" fill="#fafafa" stroke="#ccc" stroke-width="1"/>
+  <text x="520" y="660" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#444"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">Legend</text>
+
+  <!-- Solid line = required ref -->
+  <line x1="396" y1="680" x2="436" y2="680" stroke="#555" stroke-width="1.5"/>
+  <circle cx="396" cy="680" r="2.5" fill="#555"/>
+  <circle cx="436" cy="680" r="2.5" fill="#555"/>
+  <text x="448" y="684" font-size="10.5" fill="#555"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">Required reference (NOT NULL)</text>
+
+  <!-- Dashed line = nullable ref -->
+  <line x1="396" y1="702" x2="436" y2="702" stroke="#555" stroke-width="1.5" stroke-dasharray="6,3"/>
+  <circle cx="396" cy="702" r="2.5" fill="#555"/>
+  <circle cx="436" cy="702" r="2.5" fill="#555"/>
+  <text x="448" y="706" font-size="10.5" fill="#555"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">Nullable reference (terminal events)</text>
+
+  <!-- Cardinality -->
+  <text x="396" y="726" font-size="11" font-weight="bold" fill="#666"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">1  N  0..1</text>
+  <text x="460" y="726" font-size="10.5" fill="#555"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">Cardinality labels</text>
+
+  <!-- PK -->
+  <text x="396" y="748" font-size="11" fill="#333" font-family="'Consolas','Courier New',monospace">
+    <tspan font-weight="bold" fill="#b8860b">PK</tspan></text>
+  <text x="448" y="748" font-size="10.5" fill="#555"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">Primary key (:db.unique/identity)</text>
+
+  <!-- FK -->
+  <text x="396" y="764" font-size="11" fill="#333" font-family="'Consolas','Courier New',monospace">
+    <tspan font-weight="bold" fill="#c06030">FK</tspan></text>
+  <text x="448" y="764" font-size="10.5" fill="#555"
+        font-family="'Segoe UI','Helvetica Neue',Arial,sans-serif">Foreign key (:db.type/ref)</text>
+
+</svg>
+
+<script>
+function exportPNG() {
+  const svg = document.getElementById('diagram');
+  const scale = parseInt(document.getElementById('scale').value);
+  const w = 1060 * scale;
+  const h = 780 * scale;
+
+  const canvas = document.createElement('canvas');
+  canvas.width = w;
+  canvas.height = h;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(scale, scale);
+
+  const data = new XMLSerializer().serializeToString(svg);
+  const blob = new Blob([data], { type: 'image/svg+xml;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+
+  const img = new Image();
+  img.onload = function () {
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(0, 0, 1060, 780);
+    ctx.drawImage(img, 0, 0, 1060, 780);
+    URL.revokeObjectURL(url);
+
+    const a = document.createElement('a');
+    a.download = 'ufis-er-diagram-' + scale + 'x.png';
+    a.href = canvas.toDataURL('image/png');
+    a.click();
+  };
+  img.src = url;
+}
+
+function exportSVG() {
+  const svg = document.getElementById('diagram');
+  const data = new XMLSerializer().serializeToString(svg);
+  const blob = new Blob([data], { type: 'image/svg+xml;charset=utf-8' });
+  const a = document.createElement('a');
+  a.download = 'ufis-er-diagram.svg';
+  a.href = URL.createObjectURL(blob);
+  a.click();
+}
+</script>
+</body>
+</html>
